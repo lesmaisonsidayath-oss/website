@@ -1,26 +1,70 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --green-dark: #0F3D2E;
+  --green-medium: #1A5C45;
+  --green-light: #2A7D5F;
+  --gold: #C8A84E;
+  --gold-light: #E0C76A;
+  --gold-dark: #A68A3A;
+  --white: #FFFFFF;
+  --off-white: #F8F7F4;
+  --gray-light: #E8E6E1;
+  --gray: #9B9A97;
+  --dark: #1A1A1A;
+  --dark-soft: #2D2D2D;
 }
 
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
+  --color-green-dark: var(--green-dark);
+  --color-green-medium: var(--green-medium);
+  --color-green-light: var(--green-light);
+  --color-gold: var(--gold);
+  --color-gold-light: var(--gold-light);
+  --color-gold-dark: var(--gold-dark);
+  --color-off-white: var(--off-white);
+  --color-gray-light: var(--gray-light);
+  --color-gray: var(--gray);
+  --color-dark: var(--dark);
+  --color-dark-soft: var(--dark-soft);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+@layer base {
+  html {
+    scroll-behavior: smooth;
+    overflow-x: clip;
   }
+
+  body {
+    background: var(--white);
+    color: var(--dark);
+    font-family: Arial, Helvetica, sans-serif;
+    min-height: 100vh;
+  }
+
+  img {
+    max-width: 100%;
+    height: auto;
+  }
+
+  ::-webkit-scrollbar { width: 8px; }
+  ::-webkit-scrollbar-track { background: var(--off-white); }
+  ::-webkit-scrollbar-thumb { background: var(--green-medium); border-radius: 4px; }
+  ::-webkit-scrollbar-thumb:hover { background: var(--green-dark); }
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+/* Gradient text utility */
+.gradient-text {
+  background: linear-gradient(135deg, var(--gold) 0%, var(--gold-light) 50%, var(--gold) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* Hero pattern overlay */
+.hero-pattern {
+  background-image: radial-gradient(circle at 25% 25%, rgba(200, 168, 78, 0.05) 0%, transparent 50%),
+                     radial-gradient(circle at 75% 75%, rgba(200, 168, 78, 0.05) 0%, transparent 50%);
 }

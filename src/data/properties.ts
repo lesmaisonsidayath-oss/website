@@ -1,0 +1,252 @@
+export interface Property {
+  id: number;
+  title: string;
+  type: "location" | "vente";
+  category: "appartement" | "terrain" | "studio" | "F2" | "F3" | "F4" | "villa";
+  price: number;
+  priceLabel: string;
+  location: string;
+  city: string;
+  surface: number;
+  rooms: number;
+  bedrooms: number;
+  bathrooms: number;
+  image: string;
+  images: string[];
+  description: string;
+  features: string[];
+  isNew: boolean;
+  isFeatured: boolean;
+  status: "disponible" | "loué" | "vendu" | "en cours";
+}
+
+export const properties: Property[] = [
+  {
+    id: 1,
+    title: "Magnifique Appartement F3 Vue Mer",
+    type: "vente",
+    category: "F3",
+    price: 45000000,
+    priceLabel: "45 000 000 FCFA",
+    location: "Plateau, Quartier Résidentiel",
+    city: "Abidjan",
+    surface: 95,
+    rooms: 4,
+    bedrooms: 3,
+    bathrooms: 2,
+    image: "https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=800",
+    images: [],
+    description: "Superbe appartement F3 avec vue dégagée, finitions haut de gamme, cuisine équipée et parking sécurisé.",
+    features: ["Parking", "Ascenseur", "Balcon", "Climatisation", "Cuisine équipée"],
+    isNew: true,
+    isFeatured: true,
+    status: "disponible",
+  },
+  {
+    id: 2,
+    title: "Studio Moderne Centre-Ville",
+    type: "location",
+    category: "studio",
+    price: 150000,
+    priceLabel: "150 000 FCFA/mois",
+    location: "Cocody, Riviera",
+    city: "Abidjan",
+    surface: 35,
+    rooms: 1,
+    bedrooms: 1,
+    bathrooms: 1,
+    image: "https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?w=800",
+    images: [],
+    description: "Studio entièrement rénové et meublé, idéal pour jeune professionnel. Proche de toutes commodités.",
+    features: ["Meublé", "Climatisation", "Internet", "Gardiennage"],
+    isNew: false,
+    isFeatured: true,
+    status: "disponible",
+  },
+  {
+    id: 3,
+    title: "Villa Luxueuse avec Piscine",
+    type: "vente",
+    category: "villa",
+    price: 120000000,
+    priceLabel: "120 000 000 FCFA",
+    location: "Riviera Golf",
+    city: "Abidjan",
+    surface: 350,
+    rooms: 8,
+    bedrooms: 5,
+    bathrooms: 4,
+    image: "https://images.unsplash.com/photo-1613490493576-7fde63acd811?w=800",
+    images: [],
+    description: "Magnifique villa de standing avec piscine, jardin paysager et dépendances. Construction récente.",
+    features: ["Piscine", "Jardin", "Garage", "Gardiennage 24h", "Groupe électrogène"],
+    isNew: true,
+    isFeatured: true,
+    status: "disponible",
+  },
+  {
+    id: 4,
+    title: "Appartement F2 Rénové",
+    type: "location",
+    category: "F2",
+    price: 200000,
+    priceLabel: "200 000 FCFA/mois",
+    location: "Marcory, Zone 4",
+    city: "Abidjan",
+    surface: 55,
+    rooms: 3,
+    bedrooms: 2,
+    bathrooms: 1,
+    image: "https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?w=800",
+    images: [],
+    description: "Bel appartement F2 entièrement rénové dans un quartier calme et sécurisé.",
+    features: ["Balcon", "Parking", "Climatisation"],
+    isNew: false,
+    isFeatured: true,
+    status: "disponible",
+  },
+  {
+    id: 5,
+    title: "Terrain Constructible 500m²",
+    type: "vente",
+    category: "terrain",
+    price: 25000000,
+    priceLabel: "25 000 000 FCFA",
+    location: "Bingerville",
+    city: "Abidjan",
+    surface: 500,
+    rooms: 0,
+    bedrooms: 0,
+    bathrooms: 0,
+    image: "https://images.unsplash.com/photo-1500382017468-9049fed747ef?w=800",
+    images: [],
+    description: "Terrain viabilisé dans un lotissement sécurisé. ACD et permis de construire disponibles.",
+    features: ["Viabilisé", "Clôturé", "ACD disponible"],
+    isNew: true,
+    isFeatured: false,
+    status: "disponible",
+  },
+  {
+    id: 6,
+    title: "Grand Appartement F4 Familial",
+    type: "vente",
+    category: "F4",
+    price: 65000000,
+    priceLabel: "65 000 000 FCFA",
+    location: "Cocody Angré",
+    city: "Abidjan",
+    surface: 130,
+    rooms: 5,
+    bedrooms: 4,
+    bathrooms: 2,
+    image: "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=800",
+    images: [],
+    description: "Spacieux F4 dans une résidence calme, parfait pour une famille. Grand salon, cuisine aménagée.",
+    features: ["Parking", "Balcon", "Ascenseur", "Gardiennage", "Climatisation"],
+    isNew: false,
+    isFeatured: true,
+    status: "disponible",
+  },
+];
+
+export const formations = [
+  {
+    id: 1,
+    title: "Les Fondamentaux de l'Investissement Immobilier",
+    description: "Apprenez les bases de l'investissement immobilier : analyse de marché, financement, rentabilité et fiscalité.",
+    duration: "3 jours (21h)",
+    format: "Présentiel",
+    level: "Débutant",
+    price: "150 000 FCFA",
+    nextDate: "15 Mars 2026",
+    image: "https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?w=800",
+    topics: ["Analyse de marché", "Financement immobilier", "Calcul de rentabilité", "Fiscalité immobilière"],
+  },
+  {
+    id: 2,
+    title: "Gestion Locative Professionnelle",
+    description: "Maîtrisez la gestion locative : sélection des locataires, baux, contentieux et optimisation des revenus.",
+    duration: "2 jours (14h)",
+    format: "Présentiel",
+    level: "Intermédiaire",
+    price: "120 000 FCFA",
+    nextDate: "22 Mars 2026",
+    image: "https://images.unsplash.com/photo-1521791136064-7986c2920216?w=800",
+    topics: ["Rédaction de bail", "Sélection de locataires", "Gestion des impayés", "Optimisation fiscale"],
+  },
+  {
+    id: 3,
+    title: "Négociation et Transaction Immobilière",
+    description: "Techniques avancées de négociation, prospection et closing dans l'immobilier.",
+    duration: "2 jours (14h)",
+    format: "Présentiel / Distanciel",
+    level: "Avancé",
+    price: "180 000 FCFA",
+    nextDate: "5 Avril 2026",
+    image: "https://images.unsplash.com/photo-1573497019940-1c28c88b4f3e?w=800",
+    topics: ["Techniques de prospection", "Art de la négociation", "Closing efficace", "Relation client"],
+  },
+];
+
+export const blogPosts = [
+  {
+    id: 1,
+    title: "5 Conseils pour Réussir son Premier Investissement Immobilier",
+    excerpt: "L'investissement immobilier peut sembler intimidant. Voici nos 5 conseils essentiels pour démarrer sereinement.",
+    category: "Investissement",
+    date: "12 Février 2026",
+    image: "https://images.unsplash.com/photo-1560518883-ce09059eeffa?w=800",
+    readTime: "5 min",
+  },
+  {
+    id: 2,
+    title: "Les Tendances du Marché Immobilier en 2026",
+    excerpt: "Découvrez les grandes tendances qui façonnent le marché immobilier cette année et comment en tirer profit.",
+    category: "Marché",
+    date: "8 Février 2026",
+    image: "https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?w=800",
+    readTime: "7 min",
+  },
+  {
+    id: 3,
+    title: "Guide Complet : Comment Bien Préparer son Déménagement",
+    excerpt: "Un déménagement réussi se prépare. Suivez notre guide étape par étape pour une transition en douceur.",
+    category: "Conseils",
+    date: "1 Février 2026",
+    image: "https://images.unsplash.com/photo-1600585152220-90363fe7e115?w=800",
+    readTime: "6 min",
+  },
+  {
+    id: 4,
+    title: "Décoration Intérieure : Les Erreurs à Éviter",
+    excerpt: "Évitez les pièges courants de la décoration et transformez votre intérieur avec nos conseils d'experts.",
+    category: "Décoration",
+    date: "25 Janvier 2026",
+    image: "https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?w=800",
+    readTime: "4 min",
+  },
+];
+
+export const testimonials = [
+  {
+    id: 1,
+    name: "Aminata Koné",
+    role: "Propriétaire",
+    text: "Grâce à Les Maisons Idayath, j'ai trouvé le locataire idéal en moins de 2 semaines. Service professionnel et réactif !",
+    rating: 5,
+  },
+  {
+    id: 2,
+    name: "Ibrahim Diallo",
+    role: "Acheteur",
+    text: "Un accompagnement exceptionnel du début à la fin. L'équipe a su comprendre mes besoins et me trouver l'appartement parfait.",
+    rating: 5,
+  },
+  {
+    id: 3,
+    name: "Marie-Claire Bamba",
+    role: "Investisseur",
+    text: "La formation en investissement immobilier m'a ouvert les yeux. Aujourd'hui, je gère 3 biens grâce à leurs conseils.",
+    rating: 5,
+  },
+];
