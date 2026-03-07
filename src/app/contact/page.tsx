@@ -1,29 +1,25 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { motion } from "framer-motion";
 import Image from "next/image";
 import { MapPin, Phone, Mail, Clock, Send, MessageSquare } from "lucide-react";
 import SectionTitle from "@/components/SectionTitle";
-import { getContactSettings, sendContactMessage } from "@/lib/api";
-import type { ApiContactSettings } from "@/lib/api";
+import { sendContactMessage } from "@/lib/api";
+import { useContactSettings } from "@/providers/contact-provider";
 
 export default function ContactPage() {
-  const [settings, setSettings] = useState<ApiContactSettings | null>(null);
+  const settings = useContactSettings();
   const [formData, setFormData] = useState({ name: '', email: '', phone: '', subject: '', message: '' });
   const [sending, setSending] = useState(false);
   const [sent, setSent] = useState(false);
   const [error, setError] = useState('');
 
-  useEffect(() => {
-    getContactSettings().then(setSettings).catch(() => {});
-  }, []);
-
   const contactInfo = settings ? [
     { icon: MapPin, title: "Adresse", lines: [`${settings.address}, ${settings.city}`] },
     { icon: Phone, title: "Téléphone", lines: [settings.phone, settings.phone_secondary].filter(Boolean) as string[] },
     { icon: Mail, title: "Email", lines: [settings.email, settings.email_secondary].filter(Boolean) as string[] },
-    { icon: Clock, title: "Horaires", lines: settings.opening_hours ? settings.opening_hours.split('\n') : ["Lun - Ven : 8h - 18h", "Sam : 9h - 13h"] },
+    { icon: Clock, title: "Horaires", lines: [settings.hours_weekday, settings.hours_weekend].filter(Boolean) as string[] },
   ] : [
     { icon: MapPin, title: "Adresse", lines: ["Abidjan, Côte d'Ivoire"] },
     { icon: Phone, title: "Téléphone", lines: ["+225 00 00 000 000"] },
@@ -159,7 +155,7 @@ export default function ContactPage() {
             <motion.div initial={{ opacity: 0, x: 30 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }}>
               <div className="relative h-80 rounded-2xl overflow-hidden bg-gray-light mb-6">
                 <iframe
-                  src={settings?.map_url || "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d254242.0789985795!2d-4.0892503!3d5.3484185!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0xfc1ea5311959121%3A0x3fe70ddce19221a6!2sAbidjan%2C%20C%C3%B4te%20d'Ivoire!5e0!3m2!1sfr!2sfr!4v1234567890"}
+                  src={settings?.google_maps_embed || "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d254242.0789985795!2d-4.0892503!3d5.3484185!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0xfc1ea5311959121%3A0x3fe70ddce19221a6!2sAbidjan%2C%20C%C3%B4te%20d'Ivoire!5e0!3m2!1sfr!2sfr!4v1234567890"}
                   width="100%"
                   height="100%"
                   style={{ border: 0 }}

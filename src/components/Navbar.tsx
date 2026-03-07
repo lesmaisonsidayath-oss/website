@@ -6,6 +6,7 @@ import { usePathname } from "next/navigation";
 import Image from "next/image";
 import { motion, AnimatePresence } from "framer-motion";
 import { Menu, X, ChevronDown, Phone, Mail } from "lucide-react";
+import { useContactSettings } from "@/providers/contact-provider";
 
 interface NavLink {
   href: string;
@@ -37,6 +38,7 @@ const navLinks: NavLink[] = [
 
 export default function Navbar() {
   const pathname = usePathname();
+  const settings = useContactSettings();
   const [isOpen, setIsOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
 
@@ -84,18 +86,18 @@ export default function Navbar() {
           <div className="container mx-auto px-4 sm:px-6 lg:px-8">
             <div className="flex items-center justify-end gap-6 h-9 text-xs">
               <a
-                href="tel:+22500000000"
+                href={`tel:${settings?.phone?.replace(/\s/g, '') || '+22500000000'}`}
                 className="flex items-center gap-1.5 text-white/70 hover:text-gold transition-colors"
               >
                 <Phone size={12} />
-                <span>+225 00 00 000 000</span>
+                <span>{settings?.phone || '+225 00 00 000 000'}</span>
               </a>
               <a
-                href="mailto:contact@maisonsidayath.ci"
+                href={`mailto:${settings?.email || 'contact@maisonsidayath.ci'}`}
                 className="hidden sm:flex items-center gap-1.5 text-white/70 hover:text-gold transition-colors"
               >
                 <Mail size={12} />
-                <span>contact@maisonsidayath.ci</span>
+                <span>{settings?.email || 'contact@maisonsidayath.ci'}</span>
               </a>
             </div>
           </div>

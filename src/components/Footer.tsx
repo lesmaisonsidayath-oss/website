@@ -1,8 +1,12 @@
+"use client";
+
 import Link from "next/link";
 import Image from "next/image";
 import { MapPin, Phone, Mail, Clock, Facebook, Instagram, Linkedin } from "lucide-react";
+import { useContactSettings } from "@/providers/contact-provider";
 
 export default function Footer() {
+  const settings = useContactSettings();
   return (
     <footer className="bg-green-dark text-white">
       {/* CTA Banner */}
@@ -58,24 +62,43 @@ export default function Footer() {
                 Votre partenaire de confiance pour tous vos projets immobiliers. Location, vente, formation et bien plus encore.
               </p>
               <div className="flex gap-3">
-                <a
-                  href="#"
-                  className="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center hover:bg-gold transition-colors"
-                >
-                  <Facebook size={18} />
-                </a>
-                <a
-                  href="#"
-                  className="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center hover:bg-gold transition-colors"
-                >
-                  <Instagram size={18} />
-                </a>
-                <a
-                  href="#"
-                  className="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center hover:bg-gold transition-colors"
-                >
-                  <Linkedin size={18} />
-                </a>
+                {settings?.facebook_url && (
+                  <a
+                    href={settings.facebook_url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center hover:bg-gold transition-colors"
+                  >
+                    <Facebook size={18} />
+                  </a>
+                )}
+                {settings?.instagram_url && (
+                  <a
+                    href={settings.instagram_url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center hover:bg-gold transition-colors"
+                  >
+                    <Instagram size={18} />
+                  </a>
+                )}
+                {settings?.linkedin_url && (
+                  <a
+                    href={settings.linkedin_url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center hover:bg-gold transition-colors"
+                  >
+                    <Linkedin size={18} />
+                  </a>
+                )}
+                {!settings && (
+                  <>
+                    <a href="#" className="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center hover:bg-gold transition-colors"><Facebook size={18} /></a>
+                    <a href="#" className="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center hover:bg-gold transition-colors"><Instagram size={18} /></a>
+                    <a href="#" className="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center hover:bg-gold transition-colors"><Linkedin size={18} /></a>
+                  </>
+                )}
               </div>
             </div>
 
@@ -129,22 +152,21 @@ export default function Footer() {
                 <li className="flex items-start gap-3">
                   <MapPin size={18} className="text-gold mt-0.5 shrink-0" />
                   <span className="text-white/60 text-sm">
-                    Abidjan, Côte d&apos;Ivoire
+                    {settings ? `${settings.address}, ${settings.city}` : "Abidjan, Côte d'Ivoire"}
                   </span>
                 </li>
                 <li className="flex items-start gap-3">
                   <Phone size={18} className="text-gold mt-0.5 shrink-0" />
-                  <span className="text-white/60 text-sm">+225 00 00 000 000</span>
+                  <span className="text-white/60 text-sm">{settings?.phone || '+225 00 00 000 000'}</span>
                 </li>
                 <li className="flex items-start gap-3">
                   <Mail size={18} className="text-gold mt-0.5 shrink-0" />
-                  <span className="text-white/60 text-sm">contact@maisonsidayath.ci</span>
+                  <span className="text-white/60 text-sm">{settings?.email || 'contact@maisonsidayath.ci'}</span>
                 </li>
                 <li className="flex items-start gap-3">
                   <Clock size={18} className="text-gold mt-0.5 shrink-0" />
                   <span className="text-white/60 text-sm">
-                    Lun - Ven : 8h - 18h<br />
-                    Sam : 9h - 13h
+                    {settings ? (<>{settings.hours_weekday && <span>{settings.hours_weekday}</span>}{settings.hours_weekday && settings.hours_weekend && <br />}{settings.hours_weekend && <span>{settings.hours_weekend}</span>}</>) : (<>Lun - Ven : 8h - 18h<br />Sam : 9h - 13h</>)}
                   </span>
                 </li>
               </ul>
