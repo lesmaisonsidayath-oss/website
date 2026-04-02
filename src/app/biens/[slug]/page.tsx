@@ -69,10 +69,10 @@ export default function PropertyDetailPage() {
     );
   }
 
-  const images =
-    property.images && property.images.length > 0
-      ? property.images.map((img) => img.url)
-      : ["https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=800"];
+  const hasRealImages = property.images && property.images.length > 0;
+  const images = hasRealImages
+    ? property.images.map((img) => img.url)
+    : ["https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=800"];
 
   const whatsappMessage = encodeURIComponent(
     `Bonjour, je suis intéressé(e) par le bien "${property.title}". Pouvez-vous me donner plus d'informations ?`
@@ -116,58 +116,74 @@ export default function PropertyDetailPage() {
             </span>
           </div>
 
-          <div className="grid grid-cols-1 lg:grid-cols-4 gap-3">
-            {/* Thumbnail gallery - left, takes 3 cols */}
-            <div className="lg:col-span-3 grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3">
-              {images.map((img, index) => (
-                <button
-                  key={index}
-                  onClick={() => {
-                    setSelectedImage(index);
-                    setLightboxOpen(true);
-                  }}
-                  className={`relative rounded-xl overflow-hidden transition-all hover:opacity-90 ${
-                    index === 0 ? "col-span-2 row-span-2 h-[280px] sm:h-[340px]" : "h-[130px] sm:h-[165px]"
-                  }`}
+          {hasRealImages ? (
+            /* Gallery view: thumbnails grid left + preview right */
+            <div className="grid grid-cols-1 lg:grid-cols-4 gap-3">
+              <div className="lg:col-span-3 grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3">
+                {images.map((img, index) => (
+                  <button
+                    key={index}
+                    onClick={() => {
+                      setSelectedImage(index);
+                      setLightboxOpen(true);
+                    }}
+                    className={`relative rounded-xl overflow-hidden transition-all hover:opacity-90 ${
+                      index === 0 ? "col-span-2 row-span-2 h-[280px] sm:h-[340px]" : "h-[130px] sm:h-[165px]"
+                    }`}
+                  >
+                    <Image
+                      src={img}
+                      alt={`${property.title} - Photo ${index + 1}`}
+                      fill
+                      className="object-cover"
+                      priority={index === 0}
+                    />
+                    {index === 0 && images.length > 1 && (
+                      <div className="absolute bottom-3 right-3 px-3 py-1 rounded-full bg-dark/70 text-white text-xs font-medium backdrop-blur-sm">
+                        {images.length} photos
+                      </div>
+                    )}
+                  </button>
+                ))}
+              </div>
+
+              <div className="hidden lg:block lg:col-span-1">
+                <motion.div
+                  key={selectedImage}
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  className="relative h-full min-h-[340px] rounded-xl overflow-hidden cursor-pointer"
+                  onClick={() => setLightboxOpen(true)}
                 >
                   <Image
-                    src={img}
-                    alt={`${property.title} - Photo ${index + 1}`}
+                    src={images[selectedImage]}
+                    alt={property.title}
                     fill
                     className="object-cover"
-                    priority={index === 0}
                   />
-                  {index === 0 && images.length > 1 && (
-                    <div className="absolute bottom-3 right-3 px-3 py-1 rounded-full bg-dark/70 text-white text-xs font-medium backdrop-blur-sm">
-                      {images.length} photos
-                    </div>
-                  )}
-                </button>
-              ))}
+                  <div className="absolute inset-0 bg-gradient-to-t from-dark/40 to-transparent" />
+                  <div className="absolute bottom-3 left-3 right-3 text-white text-xs font-medium text-center">
+                    Cliquez pour agrandir
+                  </div>
+                </motion.div>
+              </div>
             </div>
-
-            {/* Selected image preview - right, 1 col */}
-            <div className="hidden lg:block lg:col-span-1">
-              <motion.div
-                key={selectedImage}
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                className="relative h-full min-h-[340px] rounded-xl overflow-hidden cursor-pointer"
-                onClick={() => setLightboxOpen(true)}
-              >
-                <Image
-                  src={images[selectedImage]}
-                  alt={property.title}
-                  fill
-                  className="object-cover"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-dark/40 to-transparent" />
-                <div className="absolute bottom-3 left-3 right-3 text-white text-xs font-medium text-center">
-                  Cliquez pour agrandir
-                </div>
-              </motion.div>
+          ) : (
+            /* Classic view: single placeholder image */
+            <div className="relative h-[300px] sm:h-[400px] lg:h-[500px] rounded-2xl overflow-hidden">
+              <Image
+                src={images[0]}
+                alt={property.title}
+                fill
+                className="object-cover"
+                priority
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-dark/30 to-transparent" />
+              <div className="absolute bottom-4 left-4 text-white text-sm font-medium bg-dark/50 px-3 py-1 rounded-full backdrop-blur-sm">
+                Aucune photo disponible
+              </div>
             </div>
-          </div>
+          )}
         </div>
       </section>
 
