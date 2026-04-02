@@ -61,6 +61,7 @@ export default function BiensPage() {
               {[
                 { value: "all", label: "Tous" },
                 { value: "location", label: "Location" },
+                { value: "location_meublee", label: "Meublé" },
                 { value: "vente", label: "Vente" },
               ].map((opt) => (
                 <button

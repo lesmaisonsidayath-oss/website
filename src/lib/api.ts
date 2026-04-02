@@ -23,7 +23,7 @@ export interface ApiProperty {
   title: string;
   slug: string;
   description: string;
-  type: 'location' | 'vente';
+  type: 'location' | 'location_meublee' | 'vente';
   category: string;
   status: string;
   price: number;
@@ -162,7 +162,7 @@ export async function sendContactMessage(data: {
 }
 
 // ── Helper: format price ──
-export function formatPrice(price: number, type: 'location' | 'vente'): string {
+export function formatPrice(price: number, type: 'location' | 'location_meublee' | 'vente'): string {
   const formatted = new Intl.NumberFormat('fr-FR').format(price);
-  return type === 'location' ? `${formatted} FCFA/mois` : `${formatted} FCFA`;
+  return type === 'location' || type === 'location_meublee' ? `${formatted} FCFA/mois` : `${formatted} FCFA`;
 }

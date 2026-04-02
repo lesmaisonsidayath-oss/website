@@ -32,10 +32,10 @@ export default function PropertyCard({ property, index = 0 }: { property: ApiPro
         <div className="absolute top-4 left-4 flex gap-2">
           <span
             className={`px-3 py-1 rounded-full text-xs font-semibold text-white ${
-              property.type === "location" ? "bg-green-medium" : "bg-gold"
+              property.type === "vente" ? "bg-gold" : "bg-green-medium"
             }`}
           >
-            {property.type === "location" ? "Location" : "Vente"}
+            {property.type === "location" ? "Location" : property.type === "location_meublee" ? "Meublé" : "Vente"}
           </span>
         </div>
 
