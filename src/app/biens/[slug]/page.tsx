@@ -15,6 +15,9 @@ import {
   CheckCircle2,
   Phone,
   MessageCircle,
+  ChevronLeft,
+  ChevronRight,
+  X,
 } from "lucide-react";
 import { getProperty, formatPrice } from "@/lib/api";
 import type { ApiProperty } from "@/lib/api";
@@ -28,6 +31,7 @@ export default function PropertyDetailPage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
   const [selectedImage, setSelectedImage] = useState(0);
+  const [lightboxOpen, setLightboxOpen] = useState(false);
 
   useEffect(() => {
     if (!slug) return;
@@ -44,7 +48,7 @@ export default function PropertyDetailPage() {
 
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center pt-20">
+      <div className="min-h-screen flex items-center justify-center pt-32">
         <div className="w-10 h-10 border-4 border-green-dark/20 border-t-green-dark rounded-full animate-spin" />
       </div>
     );
@@ -52,7 +56,7 @@ export default function PropertyDetailPage() {
 
   if (error || !property) {
     return (
-      <div className="min-h-screen flex flex-col items-center justify-center pt-20 px-4">
+      <div className="min-h-screen flex flex-col items-center justify-center pt-32 px-4">
         <h1 className="text-2xl font-bold text-dark mb-4">Bien non trouvé</h1>
         <p className="text-gray mb-6">Ce bien n&apos;existe pas ou a été supprimé.</p>
         <Link
@@ -74,14 +78,20 @@ export default function PropertyDetailPage() {
     `Bonjour, je suis intéressé(e) par le bien "${property.title}". Pouvez-vous me donner plus d'informations ?`
   );
 
+  const prevImage = () => setSelectedImage((prev) => (prev === 0 ? images.length - 1 : prev - 1));
+  const nextImage = () => setSelectedImage((prev) => (prev === images.length - 1 ? 0 : prev + 1));
+
   return (
     <>
+      {/* Header background band for navbar visibility */}
+      <div className="h-[100px] bg-green-dark" />
+
       {/* Back link */}
-      <section className="pt-24 pb-4 bg-off-white">
+      <section className="pt-6 pb-4 bg-off-white">
         <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <Link
             href="/biens"
-            className="inline-flex items-center gap-2 text-sm text-gray hover:text-green-dark transition-colors"
+            className="inline-flex items-center gap-2 text-sm font-medium text-dark-soft hover:text-green-dark transition-colors px-4 py-2 rounded-lg hover:bg-white"
           >
             <ArrowLeft size={16} />
             Retour aux biens
@@ -89,65 +99,124 @@ export default function PropertyDetailPage() {
         </div>
       </section>
 
-      {/* Image gallery */}
+      {/* Image Gallery */}
       <section className="pb-8 bg-off-white">
         <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
-            {/* Main image */}
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              className="lg:col-span-2 relative h-[300px] sm:h-[400px] lg:h-[500px] rounded-2xl overflow-hidden"
+          {/* Badges */}
+          <div className="flex gap-2 mb-4">
+            <span
+              className={`px-4 py-1.5 rounded-full text-xs font-semibold text-white ${
+                property.type === "vente" ? "bg-gold" : "bg-green-medium"
+              }`}
             >
-              <Image
-                src={images[selectedImage]}
-                alt={property.title}
-                fill
-                className="object-cover"
-                priority
-              />
-              <div className="absolute top-4 left-4 flex gap-2">
-                <span
-                  className={`px-3 py-1 rounded-full text-xs font-semibold text-white ${
-                    property.type === "vente" ? "bg-gold" : "bg-green-medium"
+              {property.type === "location" ? "Location" : property.type === "location_meublee" ? "Meublé" : "Vente"}
+            </span>
+            <span className="px-4 py-1.5 rounded-full text-xs font-semibold text-white bg-dark/60">
+              {property.category}
+            </span>
+          </div>
+
+          <div className="grid grid-cols-1 lg:grid-cols-4 gap-3">
+            {/* Thumbnail gallery - left, takes 3 cols */}
+            <div className="lg:col-span-3 grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3">
+              {images.map((img, index) => (
+                <button
+                  key={index}
+                  onClick={() => {
+                    setSelectedImage(index);
+                    setLightboxOpen(true);
+                  }}
+                  className={`relative rounded-xl overflow-hidden transition-all hover:opacity-90 ${
+                    index === 0 ? "col-span-2 row-span-2 h-[280px] sm:h-[340px]" : "h-[130px] sm:h-[165px]"
                   }`}
                 >
-                  {property.type === "location" ? "Location" : property.type === "location_meublee" ? "Meublé" : "Vente"}
-                </span>
-                <span className="px-3 py-1 rounded-full text-xs font-semibold text-white bg-dark/60 backdrop-blur-sm">
-                  {property.category}
-                </span>
-              </div>
-            </motion.div>
+                  <Image
+                    src={img}
+                    alt={`${property.title} - Photo ${index + 1}`}
+                    fill
+                    className="object-cover"
+                    priority={index === 0}
+                  />
+                  {index === 0 && images.length > 1 && (
+                    <div className="absolute bottom-3 right-3 px-3 py-1 rounded-full bg-dark/70 text-white text-xs font-medium backdrop-blur-sm">
+                      {images.length} photos
+                    </div>
+                  )}
+                </button>
+              ))}
+            </div>
 
-            {/* Thumbnails */}
-            {images.length > 1 && (
-              <div className="grid grid-cols-3 lg:grid-cols-1 gap-2 lg:gap-4">
-                {images.slice(0, 4).map((img, index) => (
-                  <button
-                    key={index}
-                    onClick={() => setSelectedImage(index)}
-                    className={`relative h-20 sm:h-24 lg:h-[116px] rounded-xl overflow-hidden transition-all ${
-                      selectedImage === index
-                        ? "ring-3 ring-green-dark"
-                        : "opacity-70 hover:opacity-100"
-                    }`}
-                  >
-                    <Image src={img} alt={`Vue ${index + 1}`} fill className="object-cover" />
-                    {index === 3 && images.length > 4 && (
-                      <div className="absolute inset-0 bg-dark/60 flex items-center justify-center">
-                        <span className="text-white font-bold text-lg">
-                          +{images.length - 4}
-                        </span>
-                      </div>
-                    )}
-                  </button>
-                ))}
-              </div>
-            )}
+            {/* Selected image preview - right, 1 col */}
+            <div className="hidden lg:block lg:col-span-1">
+              <motion.div
+                key={selectedImage}
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                className="relative h-full min-h-[340px] rounded-xl overflow-hidden cursor-pointer"
+                onClick={() => setLightboxOpen(true)}
+              >
+                <Image
+                  src={images[selectedImage]}
+                  alt={property.title}
+                  fill
+                  className="object-cover"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-dark/40 to-transparent" />
+                <div className="absolute bottom-3 left-3 right-3 text-white text-xs font-medium text-center">
+                  Cliquez pour agrandir
+                </div>
+              </motion.div>
+            </div>
           </div>
         </div>
       </section>
+
+      {/* Lightbox */}
+      {lightboxOpen && (
+        <div className="fixed inset-0 z-[100] bg-black/95 flex items-center justify-center">
+          <button
+            onClick={() => setLightboxOpen(false)}
+            className="absolute top-4 right-4 w-10 h-10 rounded-full bg-white/10 flex items-center justify-center text-white hover:bg-white/20 transition-colors z-10"
+          >
+            <X size={20} />
+          </button>
+
+          <button
+            onClick={prevImage}
+            className="absolute left-4 w-12 h-12 rounded-full bg-white/10 flex items-center justify-center text-white hover:bg-white/20 transition-colors z-10"
+          >
+            <ChevronLeft size={24} />
+          </button>
+
+          <div className="relative w-full h-full max-w-5xl max-h-[80vh] mx-16">
+            <Image
+              src={images[selectedImage]}
+              alt={`${property.title} - Photo ${selectedImage + 1}`}
+              fill
+              className="object-contain"
+            />
+          </div>
+
+          <button
+            onClick={nextImage}
+            className="absolute right-4 w-12 h-12 rounded-full bg-white/10 flex items-center justify-center text-white hover:bg-white/20 transition-colors z-10"
+          >
+            <ChevronRight size={24} />
+          </button>
+
+          <div className="absolute bottom-6 left-1/2 -translate-x-1/2 flex gap-2">
+            {images.map((_, index) => (
+              <button
+                key={index}
+                onClick={() => setSelectedImage(index)}
+                className={`w-2.5 h-2.5 rounded-full transition-all ${
+                  selectedImage === index ? "bg-white w-6" : "bg-white/40"
+                }`}
+              />
+            ))}
+          </div>
+        </div>
+      )}
 
       {/* Details */}
       <section className="py-8 sm:py-12 bg-off-white">
