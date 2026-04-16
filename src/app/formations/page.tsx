@@ -40,7 +40,7 @@ export default function FormationsPage() {
         <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 sm:gap-8">
             {[
-              { icon: Users, title: "Experts du Secteur", desc: "Des formateurs avec plus de 10 ans d'expérience terrain." },
+              { icon: Users, title: "Experts du Secteur", desc: "Des formateurs avec plus de 2 ans d'expérience terrain." },
               { icon: Award, title: "Certification", desc: "Un certificat de formation reconnu à la fin de chaque session." },
               { icon: Clock, title: "Flexibilité", desc: "Formations en présentiel ou distanciel selon vos disponibilités." },
             ].map((item, i) => (

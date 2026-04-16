@@ -180,7 +180,7 @@ export default function HomePage() {
                 <Image src="https://images.unsplash.com/photo-1560518883-ce09059eeffa?w=800" alt="Notre agence" fill className="object-cover" />
               </div>
               <div className="absolute bottom-4 right-4 px-4 py-3 bg-gold rounded-xl text-white shadow-lg">
-                <div className="text-xl sm:text-2xl font-bold">10+</div>
+                <div className="text-xl sm:text-2xl font-bold">2</div>
                 <div className="text-xs">ans d&apos;expérience</div>
               </div>
             </motion.div>

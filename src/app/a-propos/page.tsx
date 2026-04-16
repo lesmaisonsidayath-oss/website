@@ -56,7 +56,7 @@ export default function AProposPage() {
             transition={{ delay: 0.6 }}
             className="text-white/70 text-lg max-w-2xl mx-auto"
           >
-            Depuis plus de 10 ans, Les Maisons Idayath accompagne ses clients dans leurs projets immobiliers avec passion et expertise.
+            Depuis plus de 2 ans, Les Maisons Idayath accompagne ses clients dans leurs projets immobiliers avec passion et expertise.
           </motion.p>
         </div>
       </section>
