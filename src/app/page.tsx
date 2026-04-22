@@ -25,7 +25,7 @@ const services = [
 const stats = [
   { number: "150+", label: "Biens Gérés", icon: Building },
   { number: "200+", label: "Clients Satisfaits", icon: Users },
-  { number: "5+", label: "Années d'Expérience", icon: Award },
+  { number: "2+", label: "Années d'Expérience", icon: Award },
   { number: "50+", label: "Partenaires", icon: Star },
 ];
 

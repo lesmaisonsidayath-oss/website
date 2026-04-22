@@ -2,7 +2,7 @@ export interface Property {
   id: number;
   title: string;
   type: "location" | "vente";
-  category: "appartement" | "terrain" | "studio" | "F2" | "F3" | "F4" | "villa";
+  category: "appartement" | "terrain" | "studio" | "F2" | "F3" | "F4" | "F5" | "F6" | "F7" | "F8" | "F9" | "villa" | "bureau";
   price: number;
   priceLabel: string;
   location: string;
