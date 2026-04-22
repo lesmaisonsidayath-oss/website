@@ -81,7 +81,7 @@ export default function AProposPage() {
                 />
               </div>
               <div className="absolute bottom-4 right-4 p-4 sm:p-6 bg-gold rounded-2xl text-white shadow-xl hidden md:block">
-                <div className="text-2xl sm:text-3xl font-bold">10+</div>
+                <div className="text-2xl sm:text-3xl font-bold">2+</div>
                 <div className="text-xs sm:text-sm">Années d&apos;expérience</div>
               </div>
             </motion.div>
