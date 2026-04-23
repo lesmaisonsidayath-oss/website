@@ -17,7 +17,7 @@ const services = [
   { icon: Key, title: "Location d'Appartements", description: "Trouvez le logement idéal parmi notre large sélection d'appartements à louer.", href: "/biens?type=location", color: "from-green-dark to-green-medium" },
   { icon: Building, title: "Vente d'Appartements", description: "Investissez dans l'immobilier avec nos appartements de qualité à vendre.", href: "/biens?type=vente&cat=appartement", color: "from-green-medium to-green-light" },
   { icon: MapPin, title: "Vente de Terrains", description: "Des terrains viabilisés dans des emplacements stratégiques pour vos projets.", href: "/biens?type=vente&cat=terrain", color: "from-gold-dark to-gold" },
-  { icon: GraduationCap, title: "Formations Immobilières", description: "Développez vos compétences avec nos formations certifiantes en immobilier.", href: "/formations", color: "from-green-dark to-green-light" },
+  { icon: GraduationCap, title: "Formations Immobilières", description: "Développez vos compétences avec nos formations en immobilier.", href: "/formations", color: "from-green-dark to-green-light" },
   { icon: Paintbrush, title: "Ameublement & Décoration", description: "Transformez votre intérieur avec nos experts en design et décoration.", href: "/services#decoration", color: "from-gold to-gold-light" },
   { icon: Truck, title: "Services de Déménagement", description: "Un déménagement serein et organisé grâce à notre équipe professionnelle.", href: "/services#demenagement", color: "from-green-medium to-green-dark" },
 ];
