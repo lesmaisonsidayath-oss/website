@@ -104,7 +104,7 @@ export default function AProposPage() {
                 fait notre force et notre différence.
               </p>
               <div className="space-y-3">
-                {["Plus de 500 biens gérés avec succès", "Une équipe d'experts passionnés", "Un réseau de partenaires solide", "Des formations certifiantes reconnues"].map((item) => (
+                {["Plus de 500 biens gérés avec succès", "Une équipe d'experts passionnés", "Un réseau de partenaires solide"].map((item) => (
                   <div key={item} className="flex items-center gap-3">
                     <CheckCircle size={20} className="text-gold shrink-0" />
                     <span className="text-dark-soft">{item}</span>
