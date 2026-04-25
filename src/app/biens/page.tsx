@@ -1,30 +1,86 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef, useMemo } from "react";
 import { motion } from "framer-motion";
 import Image from "next/image";
-import { Search, SlidersHorizontal, X } from "lucide-react";
+import { Search, SlidersHorizontal, X, Loader2 } from "lucide-react";
 import PropertyCard from "@/components/PropertyCard";
 import { getProperties } from "@/lib/api";
 import type { ApiProperty } from "@/lib/api";
 
+const PAGE_SIZE = 12;
+
 export default function BiensPage() {
   const [properties, setProperties] = useState<ApiProperty[]>([]);
+  const [loading, setLoading] = useState(true);
   const [typeFilter, setTypeFilter] = useState<string>("all");
   const [categoryFilter, setCategoryFilter] = useState<string>("all");
   const [searchQuery, setSearchQuery] = useState("");
   const [showFilters, setShowFilters] = useState(false);
+  const [displayCount, setDisplayCount] = useState(PAGE_SIZE);
+  const sentinelRef = useRef<HTMLDivElement | null>(null);
 
+  // Load all properties at once
   useEffect(() => {
-    getProperties().then(setProperties).catch(() => {});
+    getProperties({ limit: "1000" })
+      .then((data) => {
+        setProperties(data);
+        setLoading(false);
+      })
+      .catch(() => setLoading(false));
   }, []);
 
-  const filtered = properties.filter((p) => {
-    if (typeFilter !== "all" && p.type !== typeFilter) return false;
-    if (categoryFilter !== "all" && p.category !== categoryFilter) return false;
-    if (searchQuery && !p.title.toLowerCase().includes(searchQuery.toLowerCase()) && !p.city.toLowerCase().includes(searchQuery.toLowerCase())) return false;
-    return true;
-  });
+  // Reset display count when filters change
+  useEffect(() => {
+    setDisplayCount(PAGE_SIZE);
+  }, [typeFilter, categoryFilter, searchQuery]);
+
+  // Filter all properties (search across all fields)
+  const filtered = useMemo(() => {
+    const q = searchQuery.trim().toLowerCase();
+    return properties.filter((p) => {
+      if (typeFilter !== "all" && p.type !== typeFilter) return false;
+      if (categoryFilter !== "all" && p.category !== categoryFilter) return false;
+      if (!q) return true;
+
+      const haystack = [
+        p.title,
+        p.city,
+        p.neighborhood,
+        p.description,
+        p.category,
+        p.type === "location_meublee" ? "meublé meuble" : p.type,
+        ...(p.features || []),
+      ]
+        .filter(Boolean)
+        .join(" ")
+        .toLowerCase();
+
+      return haystack.includes(q);
+    });
+  }, [properties, typeFilter, categoryFilter, searchQuery]);
+
+  const visible = filtered.slice(0, displayCount);
+  const hasMore = displayCount < filtered.length;
+
+  // Infinite scroll
+  useEffect(() => {
+    if (!hasMore) return;
+    const sentinel = sentinelRef.current;
+    if (!sentinel) return;
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (entries[0].isIntersecting) {
+          setDisplayCount((c) => Math.min(c + PAGE_SIZE, filtered.length));
+        }
+      },
+      { rootMargin: "200px" }
+    );
+
+    observer.observe(sentinel);
+    return () => observer.disconnect();
+  }, [hasMore, filtered.length]);
 
   return (
     <>
@@ -50,11 +106,20 @@ export default function BiensPage() {
               <Search size={18} className="absolute left-4 top-1/2 -translate-y-1/2 text-gray" />
               <input
                 type="text"
-                placeholder="Rechercher par titre ou ville..."
+                placeholder="Rechercher : titre, ville, quartier, description, équipement..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="w-full pl-12 pr-4 py-3 rounded-xl border border-gray-light bg-off-white text-dark placeholder-gray text-sm outline-none focus:border-gold focus:ring-2 focus:ring-gold/20 transition-all"
+                className="w-full pl-12 pr-12 py-3 rounded-xl border border-gray-light bg-off-white text-dark placeholder-gray text-sm outline-none focus:border-gold focus:ring-2 focus:ring-gold/20 transition-all"
               />
+              {searchQuery && (
+                <button
+                  onClick={() => setSearchQuery("")}
+                  className="absolute right-3 top-1/2 -translate-y-1/2 p-1 rounded-full hover:bg-gray-light text-gray"
+                  aria-label="Effacer la recherche"
+                >
+                  <X size={16} />
+                </button>
+              )}
             </div>
 
             <div className="flex gap-2 flex-wrap">
@@ -113,6 +178,8 @@ export default function BiensPage() {
                     <option value="F9">F9</option>
                     <option value="villa">Villa</option>
                     <option value="terrain">Terrain</option>
+                    <option value="bureau">Bureau</option>
+                    <option value="appartement">Appartement</option>
                   </select>
                 </div>
                 <button
@@ -133,15 +200,31 @@ export default function BiensPage() {
           <div className="flex items-center justify-between mb-6 sm:mb-8">
             <p className="text-gray text-sm">
               <span className="font-semibold text-dark">{filtered.length}</span> bien(s) trouvé(s)
+              {filtered.length > visible.length && (
+                <span className="text-gray/70"> — {visible.length} affichés</span>
+              )}
             </p>
           </div>
 
-          {filtered.length > 0 ? (
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
-              {filtered.map((property, index) => (
-                <PropertyCard key={property.id} property={property} index={index} />
-              ))}
+          {loading ? (
+            <div className="flex items-center justify-center py-20">
+              <Loader2 className="w-10 h-10 text-green-dark animate-spin" />
             </div>
+          ) : filtered.length > 0 ? (
+            <>
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
+                {visible.map((property, index) => (
+                  <PropertyCard key={property.id} property={property} index={index % PAGE_SIZE} />
+                ))}
+              </div>
+
+              {/* Sentinel for infinite scroll */}
+              {hasMore && (
+                <div ref={sentinelRef} className="flex justify-center py-12">
+                  <Loader2 className="w-8 h-8 text-green-dark animate-spin" />
+                </div>
+              )}
+            </>
           ) : (
             <div className="text-center py-16 sm:py-20">
               <div className="w-20 h-20 mx-auto rounded-full bg-gray-light flex items-center justify-center mb-4">
